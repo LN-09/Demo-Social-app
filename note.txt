@@ -1,0 +1,78 @@
+
+Cấu trúc dự án Next:
+/social-app
+├── /public                 # Chứa ảnh, favicon, fonts, etc.
+├── /src
+│   ├── /app                # Next.js App Router (nếu dùng app router)
+│   │   ├── /(auth)         # Nhóm route cho authentication
+│   │   ├── /dashboard      # Trang dashboard chính
+│   │   ├── layout.tsx      # Layout chính của ứng dụng
+│   │   ├── page.tsx        # Trang chính (root)
+│   │   ├── loading.tsx     # Màn hình loading chung
+│   │   ├── error.tsx       # Trang lỗi chung
+│   ├── /components         # Chứa component UI tái sử dụng
+│   │   ├── Button.tsx      # Component Button chung
+│   │   ├── Header.tsx      # Header chung
+│   │   ├── Footer.tsx      # Footer chung
+│   ├── /features           # Chia nhỏ ứng dụng theo tính năng
+│   │   ├── /auth           # Các logic về authentication
+│   │   │   ├── LoginForm.tsx
+│   │   │   ├── RegisterForm.tsx
+│   │   │   ├── authSlice.ts (Redux slice)
+│   │   │   ├── api.ts      # Gọi API auth
+│   ├── /hooks              # Hook custom tái sử dụng
+│   │   ├── useAuth.ts      # Custom hook cho auth
+│   │   ├── useTheme.ts     # Hook cho dark mode
+│   ├── /lib                # Thư viện utils, functions
+│   │   ├── axiosClient.ts  # Config Axios
+│   │   ├── fetcher.ts      # Fetch API với SWR/React Query
+│   ├── /providers          # Chứa các context provider
+│   │   ├── ThemeProvider.tsx
+│   │   ├── AuthProvider.tsx
+│   ├── /redux              # Cấu trúc Redux Toolkit
+│   │   ├── store.ts
+│   │   ├── slices/
+│   ├── /styles             # Chứa file Tailwind/global styles
+│   │   ├── globals.css
+│   │   ├── tailwind.css
+│   ├── /types              # Chứa các type và interface
+│   │   ├── auth.ts
+│   │   ├── user.ts
+│   ├── /utils              # Chứa các hàm tiện ích chung
+│   │   ├── helpers.ts
+│   │   ├── constants.ts
+│   ├── /validators         # Schema validation (Yup/Zod)
+│   │   ├── authSchema.ts
+|---|   middleware.ts
+├── .env                    # Environment variables
+├── .eslintrc.js            # ESLint config
+├── .prettierrc             # Prettier config
+├── next.config.js          # Next.js config
+├── tsconfig.json           # TypeScript config
+├── package.json            # Package dependencies
+
+
+Middleware dùng để làm gì ?
+✅ Xác thực (Authentication) trước khi vào trang
+✅ Redirect URL dựa trên điều kiện
+✅ Chặn hoặc xử lý request trước khi nó đến API hoặc page.
+
+Shadcn:
+
+
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+export default function Home() {
+  return (
+    <div className="nav-header">
+      <SignedOut>
+        <SignInButton mode="modal">
+          <button className="signin">signin</button>
+        </SignInButton>
+      </SignedOut>
+
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
+    </div>
+  );
+}
