@@ -57,22 +57,128 @@ Middleware dùng để làm gì ?
 ✅ Redirect URL dựa trên điều kiện
 ✅ Chặn hoặc xử lý request trước khi nó đến API hoặc page.
 
+
 Shadcn:
 
+.husky: dùng để khi commit sẽ duyệt commit
 
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-export default function Home() {
-  return (
-    <div className="nav-header">
-      <SignedOut>
-        <SignInButton mode="modal">
-          <button className="signin">signin</button>
-        </SignInButton>
-      </SignedOut>
 
-      <SignedIn>
-        <UserButton />
-      </SignedIn>
-    </div>
-  );
-}
+Highlights:
+🚀 Tech stack: Next.js App Router, Postgres, Prisma, Clerk & TypeScript
+💻 Server Components, Layouts, Route Handlers, Server Actions
+🔥 Special Next.js files: loading.tsx, error.tsx, not-found.tsx
+📡 API Integration using Route Handlers
+🔄 Data Fetching, Caching & Revalidation
+🎭 Client & Server Components
+🛣️ Dynamic & Static Routes
+🎨 Styling with Tailwind & Shadcn
+🔒 Authentication & Authorization
+-📤 File Uploads with UploadThing
+🗃️ Database Integration with Prisma
+🚀 Server Actions & Forms
+-⚡ Optimistic Updates
+
+
+1️⃣ Kết nối Postman với Neon Database để gửi truy vấn SQL
+Neon là một dịch vụ PostgreSQL trên cloud, bạn có thể kết nối nó với Postman để gửi truy vấn SQL trực tiếp.
+
+🔹 Bước 1: Lấy thông tin kết nối từ Neon
+Truy cập Neon Database → Đăng nhập.
+Chọn Database của bạn → Connection Details.
+Sao chép thông tin Connection string (thường có dạng):
+plaintext
+Sao chép
+Chỉnh sửa
+postgres://username:password@host:port/database
+🔹 Bước 2: Cấu hình Postman để kết nối với Neon
+Postman không hỗ trợ PostgreSQL trực tiếp, nhưng bạn có thể sử dụng REST API proxy như PostgREST hoặc một backend trung gian.
+
+🔸 Cách 1: Dùng Supabase (PostgREST)
+
+Đăng ký Supabase và kết nối Neon với Supabase.
+Lấy RESTful API URL của Supabase (đóng vai trò trung gian giữa Postman và Neon).
+Dùng Postman để gửi request GET/POST/PUT/DELETE đến API của Supabase.
+🔸 Cách 2: Dùng một API trung gian
+Nếu bạn có một Node.js Express API hoặc NestJS, bạn có thể:
+
+Tạo một API nhận request từ Postman.
+API sẽ dùng pg-promise hoặc node-postgres (pg) để kết nối với Neon.
+Trả kết quả JSON về Postman.
+2️⃣ Tạo API sử dụng Neon rồi kiểm thử với Postman
+Bạn có thể xây dựng một API đơn giản với Node.js để làm trung gian giữa Neon và Postman.
+
+🔹 Bước 1: Cài đặt thư viện PostgreSQL cho Node.js
+bash
+Sao chép
+Chỉnh sửa
+npm install pg express cors dotenv
+🔹 Bước 2: Viết API kết nối với Neon
+Tạo file server.js:
+
+javascript
+Sao chép
+Chỉnh sửa
+require('dotenv').config();
+const express = require('express');
+const { Pool } = require('pg');
+const cors = require('cors');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Kết nối đến Neon
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }, // Quan trọng khi kết nối Neon
+});
+
+// Endpoint để lấy danh sách users
+app.get('/users', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM users');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Chạy server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+🔹 Bước 3: Kiểm thử API với Postman
+Chạy server:
+bash
+Sao chép
+Chỉnh sửa
+node server.js
+Mở Postman → Chọn GET → Nhập URL API:
+bash
+Sao chép
+Chỉnh sửa
+http://localhost:5000/users
+Nhấn Send → Nếu thành công, bạn sẽ nhận được danh sách users từ Neon.
+3️⃣ Cấu hình môi trường trong Postman để làm việc với Neon
+Nếu API của bạn có nhiều môi trường (local, dev, production), bạn có thể dùng Environment Variables trong Postman.
+
+🔹 Bước 1: Tạo môi trường
+Mở Postman → Chọn Environments → Nhấn New.
+Thêm biến:
+nginx
+Sao chép
+Chỉnh sửa
+DATABASE_URL = postgres://username:password@host:port/database
+🔹 Bước 2: Sử dụng biến trong request
+Trong Postman, thay vì nhập URL trực tiếp, dùng:
+bash
+Sao chép
+Chỉnh sửa
+{{DATABASE_URL}}/users
+Điều này giúp bạn dễ dàng chuyển đổi giữa các môi trường (dev, test, prod).
+
+4️⃣ Kết luận
+✅ Bạn có thể dùng Postman với Neon bằng cách:
+
+Truy vấn Neon trực tiếp qua PostgREST hoặc API trung gian.
+Xây dựng API kết nối Neon với Postman qua Node.js.
+Sử dụng Postman Environments để quản lý biến môi trường.
