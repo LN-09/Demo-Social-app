@@ -182,3 +182,18 @@ Chỉnh sửa
 Truy vấn Neon trực tiếp qua PostgREST hoặc API trung gian.
 Xây dựng API kết nối Neon với Postman qua Node.js.
 Sử dụng Postman Environments để quản lý biến môi trường.
+
+🔹 File Actions là gì?
+Là các hàm chạy trên server nhưng có thể được gọi từ client mà không cần API routes riêng.
+Được đặt trong các file tách biệt, giúp tổ chức mã tốt hơn.
+Hoạt động dựa trên React Server Actions, nhưng Next.js cho phép tự động tạo API endpoints khi cần.
+Có thể dùng để tương tác với database, gửi email, xử lý file, xác thực... mà không lộ logic trên client.
+🔹 So sánh với API Routes
+
+	File Actions	🆚 API Routes
+Khai báo	Hàm server trong file .ts	Route trong app/api/
+Gọi từ client	Import và gọi trực tiếp	Fetch bằng fetch()
+Bảo mật	Không bị lộ, chỉ chạy trên server	Cần xác thực request
+Hiệu suất	Tối ưu hơn, ít overhead	Có thêm HTTP overhead
+👉 Dùng File Actions khi xử lý dữ liệu đơn giản (CRUD, form submissions, auth...)
+👉 Dùng API Routes khi cần endpoint RESTful, caching, middlewar
