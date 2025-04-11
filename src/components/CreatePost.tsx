@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { Card, CardContent } from "@/components/common/ui/card";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
@@ -9,7 +9,7 @@ import { ImageIcon, Loader2Icon, SendIcon } from "lucide-react";
 import { Button } from "@/components/common/ui/button";
 import { createPost } from "@/actions/post.action";
 import toast from "react-hot-toast";
-// import ImageUpload from "./ImageUpload";
+import ImageUpload from "./ImageUpload";
 
 function CreatePost() {
   const { user } = useUser();
@@ -57,10 +57,10 @@ function CreatePost() {
             />
           </div>
 
-          {/* {(showImageUpload || imageUrl) && (
+          {(showImageUpload || imageUrl) && (
             <div className="border rounded-lg p-4">
               <ImageUpload
-                endpoint="postImage"
+                endpoint="imageUploader"
                 value={imageUrl}
                 onChange={(url: SetStateAction<string>) => {
                   setImageUrl(url);
@@ -68,7 +68,7 @@ function CreatePost() {
                 }}
               />
             </div>
-          )} */}
+          )}
 
           <div className="flex items-center justify-between border-t pt-4">
             <div className="flex space-x-2">
