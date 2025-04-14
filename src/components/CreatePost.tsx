@@ -25,7 +25,6 @@ function CreatePost() {
     try {
       const result = await createPost(content, imageUrl);
       if (result?.success) {
-        // reset the form
         setContent("");
         setImageUrl("");
         setShowImageUpload(false);
@@ -58,7 +57,7 @@ function CreatePost() {
           </div>
 
           {(showImageUpload || imageUrl) && (
-            <div className="border rounded-lg p-4">
+            <div className="border rounded-lg p-2">
               <ImageUpload
                 endpoint="imageUploader"
                 value={imageUrl}
@@ -80,7 +79,7 @@ function CreatePost() {
                 onClick={() => setShowImageUpload(!showImageUpload)}
                 disabled={isPosting}
               >
-                <ImageIcon className="size-4 mr-2" />
+                <ImageIcon size={16} className="mr-2" />
                 Photo
               </Button>
             </div>
@@ -91,12 +90,12 @@ function CreatePost() {
             >
               {isPosting ? (
                 <>
-                  <Loader2Icon className="size-4 mr-2 animate-spin" />
+                  <Loader2Icon size={16} className="mr-2 animate-spin" />
                   Posting...
                 </>
               ) : (
                 <>
-                  <SendIcon className="size-4 mr-2" />
+                  <SendIcon size={16} className="mr-2" />
                   Post
                 </>
               )}
