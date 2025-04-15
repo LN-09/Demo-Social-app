@@ -54,6 +54,7 @@ function CreatePost() {
               onChange={(e) => setContent(e.target.value)}
               disabled={isPosting}
             />
+            Check Husky
           </div>
 
           {(showImageUpload || imageUrl) && (
