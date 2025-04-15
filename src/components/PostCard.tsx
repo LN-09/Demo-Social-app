@@ -5,6 +5,7 @@ import { SignInButton, useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Card, CardContent } from "./common/ui/card";
+import Image from "next/image";
 import Link from "next/link";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { formatDistanceToNow } from "date-fns";
@@ -22,7 +23,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
   const [isCommenting, setIsCommenting] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [hasLiked, setHasLiked] = useState(post.likes.some((like) => like.userId === dbUserId));
+  const [hasLiked, setHasLiked] = useState(post.likes.some((like: { userId: string }) => like.userId === dbUserId));
   const [optimisticLikes, setOptmisticLikes] = useState(post._count.likes);
   const [showComments, setShowComments] = useState(false);
 
@@ -30,12 +31,12 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
     if (isLiking) return;
     try {
       setIsLiking(true);
-      setHasLiked((prev) => !prev);
-      setOptmisticLikes((prev) => prev + (hasLiked ? -1 : 1));
+      setHasLiked((prev: boolean) => !prev);
+      setOptmisticLikes((prev: number) => prev + (hasLiked ? -1 : 1));
       await toggleLike(post.id);
     } catch {
       setOptmisticLikes(post._count.likes);
-      setHasLiked(post.likes.some((like) => like.userId === dbUserId));
+      setHasLiked(post.likes.some((like: { userId: string }) => like.userId === dbUserId));
     } finally {
       setIsLiking(false);
     }
@@ -109,9 +110,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
 
           {/* POST IMAGE */}
           {post.image && (
-            <div className="rounded-lg overflow-hidden">
-              <img src={post.image} alt="Post content" className="w-full h-auto object-cover" />
-            </div>
+              <Image src={post.image} alt="Post content" className="w-full h-auto object-cover" width={800} height={600} />
           )}
 
           {/* LIKE & COMMENT BUTTONS */}
@@ -159,7 +158,7 @@ function PostCard({ post, dbUserId }: { post: Post; dbUserId: string | null }) {
             <div className="space-y-4 pt-4 border-t">
               <div className="space-y-4">
                 {/* DISPLAY COMMENTS */}
-                {post.comments.map((comment) => (
+                {post.comments.map((comment: { id: string; author: { image?: string; name: string; username: string }; content: string; createdAt: string }) => (
                   <div key={comment.id} className="flex space-x-3">
                     <Avatar className="size-8 flex-shrink-0">
                       <AvatarImage src={comment.author.image ?? "/avatar.png"} />

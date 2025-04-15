@@ -4,8 +4,18 @@ import { Avatar, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import FollowButton from "./FollowButton";
 
+type User = {
+  id: string;
+  username: string;
+  name: string;
+  image?: string;
+  _count: {
+    followers: number;
+  };
+};
+
 async function WhoToFollow() {
-  const users = await getRandomUsers();
+  const users: User[] = await getRandomUsers();
   if (users.length === 0) return null;
   return (
     <Card>

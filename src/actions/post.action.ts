@@ -1,6 +1,6 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { getDbUserId } from "./user.action";
 import { revalidatePath } from "next/cache";
 const prisma = new PrismaClient();
@@ -154,7 +154,7 @@ export async function createComment(postId: string, content: string) {
     if (!post) throw new Error("Post not found");
 
     // Create comment and notification in a transaction
-    const [comment] = await prisma.$transaction(async (tx) => {
+    const [comment] = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       // Create comment first
       const newComment = await tx.comment.create({
         data: {
